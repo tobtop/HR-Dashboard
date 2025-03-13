@@ -417,7 +417,12 @@
 }
 
 .dashboard-card .card-title {
-    margin-bottom: 1rem;
+    color: white !important;
+}
+
+.card-header h5 {
+    color: white !important;
+    margin: 0;
 }
 
 .chart-wrapper {
