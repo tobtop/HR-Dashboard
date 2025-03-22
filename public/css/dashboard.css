@@ -1,0 +1,98 @@
+:root {
+    --primary-dark: #1a237e;
+    --primary-light: #534bae;
+    --secondary-dark: #263238;
+    --accent-color: #0d47a1;
+}
+
+.dashboard-title-hr {
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.dashboard-title-dashboard {
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-left: 8px;
+    font-size: 2rem;
+}
+
+.performance-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-color) 100%);
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+    color: white;
+}
+
+.dashboard-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(26, 35, 126, 0.1);
+}
+
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-title {
+    color: var(--secondary-dark) !important;
+}
+
+/* Navbar Styles */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,0.9);
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 4px;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(26, 35, 126, 0.1);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+} 

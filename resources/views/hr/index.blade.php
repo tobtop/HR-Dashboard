@@ -82,6 +82,30 @@
                     </div>
 
                     <!-- ตารางแสดงข้อมูล -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-white py-2">
+                                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>ค่าเฉลี่ยความผูกพันและความพึงพอใจ</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="averageChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-white py-2">
+                                    <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>การกระจายตัวของ Performance</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="performanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ตารางแสดงข้อมูล -->
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
@@ -240,4 +264,128 @@
     border-color: #1976d2;
 }
 </style>
+
+<!-- เพิ่ม Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const employees = @json($employees);
+    let avgEngagement = 0;
+    let avgSatisfaction = 0;
+    let count = 0;
+
+    // สำหรับ Performance Pie Chart
+    const performanceRanges = {
+        'ดีเยี่ยม (4.1-5.0)': 0,
+        'ดี (3.1-4.0)': 0,
+        'ปานกลาง (2.1-3.0)': 0,
+        'พอใช้ (1.1-2.0)': 0,
+        'ต้องปรับปรุง (0-1.0)': 0
+    };
+
+    employees.forEach(employee => {
+        if (employee.performance) {
+            // สำหรับ Bar Chart
+            avgEngagement += parseFloat(employee.performance.EngagementScore || 0);
+            avgSatisfaction += parseFloat(employee.performance.SatisfactionScore || 0);
+            
+            // สำหรับ Pie Chart
+            const perfScore = parseFloat(employee.performance.PerformanceScore || 0);
+            if (perfScore > 4.0) performanceRanges['ดีเยี่ยม (4.1-5.0)']++;
+            else if (perfScore > 3.0) performanceRanges['ดี (3.1-4.0)']++;
+            else if (perfScore > 2.0) performanceRanges['ปานกลาง (2.1-3.0)']++;
+            else if (perfScore > 1.0) performanceRanges['พอใช้ (1.1-2.0)']++;
+            else performanceRanges['ต้องปรับปรุง (0-1.0)']++;
+            
+            count++;
+        }
+    });
+
+    avgEngagement = count ? (avgEngagement / count).toFixed(1) : 0;
+    avgSatisfaction = count ? (avgSatisfaction / count).toFixed(1) : 0;
+
+    // Bar Chart
+    const barCtx = document.getElementById('averageChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: ['ความผูกพัน', 'ความพึงพอใจ'],
+            datasets: [{
+                data: [avgEngagement, avgSatisfaction],
+                backgroundColor: ['#4CAF50', '#FF9800'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + ' คะแนน';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Pie Chart
+    const pieCtx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(performanceRanges),
+            datasets: [{
+                data: Object.values(performanceRanges),
+                backgroundColor: [
+                    '#4CAF50',  // ดีเยี่ยม
+                    '#8BC34A',  // ดี
+                    '#FFC107',  // ปานกลาง
+                    '#FF9800',  // พอใช้
+                    '#F44336'   // ต้องปรับปรุง
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw;
+                            const percentage = ((value / count) * 100).toFixed(1);
+                            return `${value} คน (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 @endsection 

@@ -75,6 +75,13 @@
     </style>
 
     @stack('styles')
+
+
+
+
+
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-md">
